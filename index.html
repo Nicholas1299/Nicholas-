@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Pro AI Image Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root { color-scheme: dark; }
+    body { background: radial-gradient(circle at 20% -10%, #332100 0%, #0f0f12 45%, #060606 100%); -webkit-tap-highlight-color: transparent; }
+    .glass { background: linear-gradient(135deg, rgba(35,35,38,.55), rgba(14,14,17,.72)); backdrop-filter: blur(16px); border: 1px solid rgba(214,169,72,.25); box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 14px 30px rgba(0,0,0,.35); }
+    .gold-text { background: linear-gradient(90deg,#ffe9a6,#d4af37,#fff1c2); -webkit-background-clip: text; color: transparent; }
+    .input-base { background: rgba(8,8,10,.72); border:1px solid rgba(214,169,72,.3); border-radius: .85rem; min-height: 3rem; }
+    .btn { min-height: 3.25rem; border-radius: .9rem; font-weight: 700; touch-action: manipulation; }
+    .btn-gold { background: linear-gradient(135deg,#8a661f,#f0ce6e,#8a661f); color:#111; }
+    .btn-dark { background: rgba(22,22,26,.9); border:1px solid rgba(214,169,72,.35); color:#f7df9a; }
+  </style>
+</head>
+<body class="text-zinc-100 min-h-screen p-3 md:p-5">
+<div class="max-w-[1700px] mx-auto space-y-4">
+  <header class="glass rounded-2xl p-4 md:p-6">
+    <h1 class="text-2xl md:text-3xl font-bold gold-text">Pro AI Image Studio · 女生生图 Prompt Builder</h1>
+  </header>
+
+  <main class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+    <section class="glass rounded-2xl p-4 space-y-4">
+      <h2 class="text-xl font-semibold gold-text">上传参考图</h2>
+      <input id="imageInput" type="file" accept="image/*" class="w-full input-base p-3" />
+      <div id="previewWrap" class="rounded-xl border border-dashed border-amber-500/40 min-h-[260px] flex items-center justify-center p-3 bg-black/30"><p class="text-zinc-500">尚未上传图片</p></div>
+      <div>
+        <h3 class="text-sm text-amber-200 mb-2">Preset Library</h3>
+        <select id="template" class="w-full input-base p-3">
+          <option>无模板（自定义）</option><option>Cannes Red Carpet</option><option>Korean Magazine Cover</option><option>Luxury White Shirt</option><option>Office CEO Woman</option><option>Soft Korean Girlfriend</option><option>Luxury Editorial Beauty</option><option>Street Fashion</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="glass rounded-2xl p-4 space-y-4">
+      <h2 class="text-xl font-semibold gold-text">参数面板</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div><label>发型</label><select id="hair" class="w-full input-base p-3"><option>全背头</option><option>韩系大波浪</option><option>半扎发</option><option>公主头</option><option>湿发造型</option></select></div>
+        <div><label>Hair Color</label><select id="hairColor" class="w-full input-base p-3"><option>black</option><option>brown</option><option>dark brown</option><option>ash brown</option><option>blonde</option><option>silver gray</option></select></div>
+        <div><label>妆容</label><select id="makeup" class="w-full input-base p-3"><option>韩系高级妆</option><option>红毯妆</option><option>自然清透妆</option><option>欧美浓妆</option></select></div>
+        <div><label>服装</label><select id="outfit" class="w-full input-base p-3"><option>礼服</option><option>白衬衫</option><option>针织上衣</option><option>牛仔套装</option><option>职场西装</option></select></div>
+        <div><label>气质</label><select id="vibe" class="w-full input-base p-3"><option>高级感</option><option>温柔</option><option>性感但不暴露</option><option>明星红毯</option><option>杂志封面</option></select></div>
+        <div><label>Pose</label><select id="pose" class="w-full input-base p-3"><option>站立回眸</option><option>自然行走抓拍</option><option>侧身叉腰</option><option>双手轻扶发丝</option><option>坐姿微前倾</option></select></div>
+        <div><label>镜头</label><select id="lens" class="w-full input-base p-3"><option>50mm</option><option>85mm</option><option>135mm</option><option>iPhone 2x</option></select></div>
+        <div><label>光线</label><select id="light" class="w-full input-base p-3"><option>暖窗光</option><option>红毯闪光灯</option><option>黄金时刻</option><option>柔和棚拍</option></select></div>
+        <div><label>Scene</label><select id="scene" class="w-full input-base p-3"><option>luxury hotel lobby</option><option>red carpet</option><option>coffee shop</option><option>office CEO room</option><option>modern apartment</option><option>Paris street</option><option>Tokyo night street</option><option>luxury penthouse</option></select></div>
+        <div><label>Camera Controls</label><select id="cameraControl" class="w-full input-base p-3"><option>close-up</option><option>half body</option><option>full body</option><option>editorial composition</option><option>shallow depth of field</option></select></div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <button id="generateBtn" class="btn btn-gold">生成 Prompt</button>
+        <button id="saveBtn" class="btn btn-dark">保存到历史</button>
+      </div>
+    </section>
+
+    <section class="glass rounded-2xl p-4 space-y-4">
+      <h2 class="text-xl font-semibold gold-text">Prompt Preview Card</h2>
+      <div class="glass rounded-xl p-3 space-y-2">
+        <p class="text-xs text-amber-200">当前参数 Summary</p>
+        <p id="summaryOutput" class="text-sm text-zinc-200"></p>
+      </div>
+      <div class="glass rounded-xl p-3"><p class="text-xs text-amber-200 mb-2">Final Prompt</p><textarea id="promptOutput" class="w-full input-base p-3 min-h-[150px]"></textarea></div>
+      <div class="glass rounded-xl p-3"><p class="text-xs text-amber-200 mb-2">Negative Prompt</p><textarea id="negativeOutput" class="w-full input-base p-3 min-h-[120px]"></textarea></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <button id="copyPromptBtn" class="btn btn-gold">复制 Prompt</button>
+        <button id="copyNegativeBtn" class="btn btn-gold">复制 Negative</button>
+        <button id="exportBtn" class="btn btn-dark">导出 .txt</button>
+        <button id="clearHistoryBtn" class="btn btn-dark">清空历史</button>
+      </div>
+      <h3 class="text-lg font-semibold text-amber-200">History Gallery</h3>
+      <div id="historyList" class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[320px] overflow-auto pr-1"></div>
+    </section>
+  </main>
+</div>
+<script>
+const maps={hair:{'全背头':'slicked-back hairstyle','韩系大波浪':'Korean-style big wavy hair','半扎发':'half-up hairstyle','公主头':'princess half-up hair','湿发造型':'wet hair look'},makeup:{'韩系高级妆':'high-end Korean makeup','红毯妆':'red carpet glam makeup','自然清透妆':'natural translucent makeup','欧美浓妆':'bold Western glam makeup'},outfit:{'礼服':'elegant evening gown','白衬衫':'clean white shirt','针织上衣':'soft knit top','牛仔套装':'stylish denim set','职场西装':'tailored business suit'},vibe:{'高级感':'luxury editorial vibe','温柔':'gentle feminine mood','性感但不暴露':'sensual but tasteful presence','明星红毯':'celebrity red carpet aura','杂志封面':'fashion magazine cover style'},light:{'暖窗光':'warm window light','红毯闪光灯':'red carpet flash lighting','黄金时刻':'golden hour lighting','柔和棚拍':'soft studio lighting'},pose:{'站立回眸':'standing and looking back over shoulder','自然行走抓拍':'natural walking candid','侧身叉腰':'side pose with hand on hip','双手轻扶发丝':'hands lightly touching hair','坐姿微前倾':'seated pose with subtle forward lean'}};
+const templates={
+'Cannes Red Carpet':{outfit:'礼服',makeup:'红毯妆',vibe:'明星红毯',light:'红毯闪光灯',lens:'85mm',pose:'站立回眸',scene:'red carpet',cameraControl:'full body'},
+'Korean Magazine Cover':{hair:'韩系大波浪',makeup:'韩系高级妆',outfit:'针织上衣',vibe:'杂志封面',light:'柔和棚拍',lens:'50mm',pose:'双手轻扶发丝',scene:'modern apartment',cameraControl:'editorial composition'},
+'Luxury White Shirt':{outfit:'白衬衫',vibe:'高级感',scene:'luxury penthouse',light:'暖窗光',cameraControl:'half body'},
+'Office CEO Woman':{outfit:'职场西装',vibe:'高级感',scene:'office CEO room',lens:'85mm',pose:'侧身叉腰'},
+'Soft Korean Girlfriend':{hair:'半扎发',makeup:'自然清透妆',vibe:'温柔',scene:'coffee shop',light:'黄金时刻'},
+'Luxury Editorial Beauty':{hair:'全背头',makeup:'韩系高级妆',vibe:'杂志封面',scene:'luxury hotel lobby',cameraControl:'editorial composition'},
+'Street Fashion':{outfit:'牛仔套装',vibe:'高级感',scene:'Tokyo night street',cameraControl:'full body',light:'红毯闪光灯'}
+};
+const negativePrompt='nudity, explicit sexual content, underage, pornographic pose, vulgar body language, plastic skin, over-retouching, extra fingers, extra limbs, watermark, text, cartoon, anime';
+const key='girls_prompt_builder_history_v3';
+const $=id=>document.getElementById(id); const fields=['hair','hairColor','makeup','outfit','vibe','pose','lens','light','scene','cameraControl'];
+const els={imageInput:$('imageInput'),previewWrap:$('previewWrap'),template:$('template'),generateBtn:$('generateBtn'),saveBtn:$('saveBtn'),promptOutput:$('promptOutput'),negativeOutput:$('negativeOutput'),summaryOutput:$('summaryOutput'),copyPromptBtn:$('copyPromptBtn'),copyNegativeBtn:$('copyNegativeBtn'),exportBtn:$('exportBtn'),clearHistoryBtn:$('clearHistoryBtn'),historyList:$('historyList')};
+fields.forEach(f=>els[f]=$(f));
+els.negativeOutput.value=negativePrompt;
+function applyTemplate(){const t=templates[els.template.value];if(!t)return;Object.entries(t).forEach(([k,v])=>els[k]&&(els[k].value=v));updateSummary();}
+function updateSummary(){els.summaryOutput.textContent=fields.map(f=>`${f}: ${els[f].value}`).join(' | ');}
+function generatePrompt(){updateSummary(); const p=[`Ultra-realistic portrait photo of the same adult woman from the reference image, ${maps.hair[els.hair.value]}, ${els.hairColor.value} hair color, ${maps.makeup[els.makeup.value]}, wearing ${maps.outfit[els.outfit.value]}, ${maps.vibe[els.vibe.value]}, ${maps.pose[els.pose.value]}, scene: ${els.scene.value}, shot on ${els.lens.value}, ${maps.light[els.light.value]}, ${els.cameraControl.value}, cinematic composition, high detail, premium editorial quality, same adult woman, maintaining exact facial identity from the reference image, strict facial identity consistency, no transformation, no beautification, no morphing, maintain original facial proportions and realistic skin texture.`]; els.promptOutput.value=p.join(' '); els.negativeOutput.value=negativePrompt; return {prompt:els.promptOutput.value,negative:negativePrompt};}
+function load(){try{return JSON.parse(localStorage.getItem(key)||'[]')}catch{return[]}}
+function save(items){localStorage.setItem(key,JSON.stringify(items));render(items)}
+function render(items=load()){els.historyList.innerHTML=''; if(!items.length){els.historyList.innerHTML='<p class="text-zinc-500">暂无历史</p>'; return;} items.forEach((it,i)=>{const c=document.createElement('button'); c.className='text-left glass rounded-xl p-3'; c.innerHTML=`<div class="aspect-[4/3] rounded-lg bg-black/30 flex items-center justify-center mb-2 text-xs text-zinc-400">History #${items.length-i}</div><p class="text-xs text-zinc-400 mb-1">${new Date(it.time).toLocaleString()}</p><p class="text-xs text-zinc-200 line-clamp-2">${it.summary}</p>`; c.addEventListener('click',()=>{fields.forEach(f=>els[f].value=it.fields[f]); els.promptOutput.value=it.prompt; els.negativeOutput.value=it.negative; updateSummary();}); els.historyList.appendChild(c);});}
+async function copyText(t,label){if(!t)return alert(`没有可复制的${label}`); try{await navigator.clipboard.writeText(t);}catch{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();} alert(`${label}已复制`);}
+els.imageInput.addEventListener('change',e=>{const f=e.target.files?.[0]; if(!f)return; const r=new FileReader(); r.onload=ev=>els.previewWrap.innerHTML=`<img src="${ev.target.result}" class="w-full max-h-[460px] object-contain rounded-lg"/>`; r.readAsDataURL(f);});
+els.template.addEventListener('change',applyTemplate); fields.forEach(f=>els[f].addEventListener('change',updateSummary)); els.generateBtn.addEventListener('click',generatePrompt);
+els.saveBtn.addEventListener('click',()=>{if(!els.promptOutput.value.trim()) return alert('请先生成 Prompt'); const item={time:Date.now(),prompt:els.promptOutput.value.trim(),negative:els.negativeOutput.value.trim(),summary:els.summaryOutput.textContent,fields:Object.fromEntries(fields.map(f=>[f,els[f].value]))}; const items=load(); items.unshift(item); save(items.slice(0,30));});
+els.copyPromptBtn.addEventListener('click',()=>copyText(els.promptOutput.value.trim(),'Prompt')); els.copyNegativeBtn.addEventListener('click',()=>copyText(els.negativeOutput.value.trim(),'Negative Prompt'));
+els.exportBtn.addEventListener('click',()=>{if(!els.promptOutput.value.trim()) return alert('请先生成 Prompt'); const content=`Summary:\n${els.summaryOutput.textContent}\n\nPrompt:\n${els.promptOutput.value}\n\nNegative Prompt:\n${els.negativeOutput.value}`; const blob=new Blob([content],{type:'text/plain;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`prompt-${new Date().toISOString().slice(0,19).replace(/[T:]/g,'-')}.txt`; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),500);});
+els.clearHistoryBtn.addEventListener('click',()=>{if(!confirm('确定清空历史记录吗？'))return; localStorage.removeItem(key); render([]);});
+updateSummary(); render();
+</script>
+</body>
+</html>
